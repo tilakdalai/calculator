@@ -48,5 +48,65 @@
             </form>
         </div>
     </div>
+    <script>
+        const display = document.querySelector('input[name="display"]');
+      
+        // Function to append a value to the display
+        function appendValue(value) {
+          display.value += value;
+        }
+      
+        // Function to calculate the result
+        function calculate() {
+          try {
+            display.value = eval(display.value); // Caution: Avoid eval in production; use safer alternatives
+          } catch {
+            display.value = "Error";
+          }
+        }
+      
+        // Function to clear the display
+        function clearDisplay() {
+          display.value = '';
+        }
+      
+        // Listen for key presses
+        document.addEventListener('keydown', (event) => {
+          const key = event.key;
+      
+          // Handle numbers and operators
+          if (!isNaN(key) || ['+', '-', '*', '/', '.', '%'].includes(key)) {
+            appendValue(key);
+          }
+          // Handle "Enter" for calculation
+          else if (key === 'Enter') {
+            calculate();
+            event.preventDefault(); // Prevent default form submission
+          }
+          // Handle "Backspace" to delete the last character
+          else if (key === 'Backspace') {
+            display.value = display.value.slice(0, -1);
+          }
+          // Handle "Escape" to clear the display
+          else if (key === 'Escape') {
+            clearDisplay();
+          }
+          // Handle numpad keys
+          else if (event.code.startsWith('Numpad')) {
+            const numpadKey = event.code.replace('Numpad', '');
+            if (!isNaN(numpadKey) || ['Add', 'Subtract', 'Multiply', 'Divide', 'Decimal'].includes(numpadKey)) {
+              const charMap = {
+                Add: '+',
+                Subtract: '-',
+                Multiply: '*',
+                Divide: '/',
+                Decimal: '.',
+              };
+              appendValue(charMap[numpadKey] || numpadKey);
+            }
+          }
+        });
+      </script>
+      
 </body>
 </html>
